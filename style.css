@@ -1,0 +1,559 @@
+/* ============================================================================
+   СТИЛИ СТАТЬИ «Как сделать рацион более здоровым без подсчёта калорий»
+   ----------------------------------------------------------------------------
+   Файл разбит на смысловые блоки. У каждого блока есть заголовок-комментарий,
+   объясняющий простыми словами, за что он отвечает.
+
+   Главный принцип вёрстки здесь — правило внутреннего и внешнего:
+   расстояние ВНУТРИ смыслового блока всегда меньше, чем расстояние
+   МЕЖДУ разными блоками. Так глаз сразу понимает, что к чему относится.
+   Поэтому почти все отступы берутся из набора переменных ниже, а не «на глаз».
+   ========================================================================== */
+
+
+/* ----------------------------------------------------------------------------
+   1. ПЕРЕМЕННЫЕ (дизайн-токены)
+   Здесь собраны все цвета и размеры. Меняете значение тут — оно меняется
+   сразу на всей странице. Не нужно искать число по всему файлу.
+---------------------------------------------------------------------------- */
+:root {
+    /* Цвета фона. Тема тёмная — как в мобильном приложении Т—Ж на скриншотах */
+    --bg:            #1a1a1a;   /* основной фон страницы */
+    --bg-card:       #242424;   /* фон карточек: совет, плашка автора */
+    --bg-card-soft:  #2c2c2c;   /* фон заглушки под картинку */
+
+    /* Цвета текста */
+    --text:          #ededed;   /* основной текст статьи */
+    --text-strong:   #ffffff;   /* заголовки и выделенный жирный текст */
+    --text-muted:    #9a9a9a;   /* подписи к картинкам, служебные подписи */
+
+    /* Акцентные цвета */
+    --accent:        #4a9eff;   /* ссылки — спокойный голубой, как в Т—Ж */
+    --accent-hover:  #7bb8ff;   /* ссылка при наведении мышкой */
+    --tip:           #4ea72e;   /* зелёный — цвет советов (как в исходнике) */
+    --line:          #383838;   /* тонкие разделительные линии */
+
+    /* Шаг отступов. Один набор на весь сайт — отсюда «правило близости».
+       xs/sm — внутренние отступы, md/lg/xl — внешние, между блоками. */
+    --space-xs:  4px;
+    --space-sm:  8px;
+    --space-md:  16px;
+    --space-lg:  24px;
+    --space-xl:  40px;
+    --space-2xl: 64px;
+    --space-3xl: 96px;
+
+    /* Скругление углов карточек и картинок */
+    --radius:    14px;
+
+    /* Ширина колонки с текстом. Узкая колонка — текст легче читать */
+    --content-width: 680px;
+}
+
+
+/* ----------------------------------------------------------------------------
+   2. БАЗОВЫЙ СБРОС И ОБЩИЕ ПРАВИЛА
+   Убираем стандартные отступы браузера и задаём единый шрифт.
+---------------------------------------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;   /* ширина считается вместе с padding — так проще */
+}
+
+html {
+    scroll-behavior: smooth;  /* плавная прокрутка при клике по оглавлению */
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    /* Системный шрифт: на Mac это San Francisco, на Windows — Segoe UI.
+       Выглядит чисто и «по-журнальному», грузится мгновенно. */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter",
+                 "Helvetica Neue", Arial, sans-serif;
+    font-size: 19px;          /* крупный кегль — комфортно читать длинный текст */
+    line-height: 1.65;        /* воздух между строками */
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* Все ссылки в тексте — одним спокойным акцентным цветом */
+a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(74, 158, 255, 0.35); /* тонкое подчёркивание */
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+a:hover {
+    color: var(--accent-hover);
+    border-bottom-color: var(--accent-hover);
+}
+
+
+/* ----------------------------------------------------------------------------
+   3. КАРКАС СТАТЬИ
+   .longread — обёртка всей статьи.
+   .container — узкая колонка по центру, в ней живёт весь текст.
+   Внешние поля (между колонкой и краем экрана) больше внутренних —
+   это и есть «внешнее больше внутреннего».
+---------------------------------------------------------------------------- */
+.longread {
+    padding: var(--space-2xl) var(--space-lg) var(--space-3xl);
+}
+
+.container {
+    max-width: var(--content-width);
+    margin: 0 auto;           /* центрируем колонку */
+}
+
+/* Расстояние между обычными абзацами внутри одного раздела —
+   среднее: абзацы связаны по смыслу, но это всё же разные мысли. */
+.container p {
+    margin-bottom: var(--space-md);
+}
+.container p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ----------------------------------------------------------------------------
+   4. ШАПКА: ЗАГОЛОВОК H1 И ЛИД
+   Самый крупный блок страницы. Под ним — вводный абзац (лид) покрупнее.
+---------------------------------------------------------------------------- */
+.article-header {
+    margin-bottom: var(--space-xl);
+}
+
+.article-header__title {
+    color: var(--text-strong);
+    font-size: 46px;
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -0.02em;  /* чуть плотнее — крупные заголовки так аккуратнее */
+    margin-bottom: var(--space-md);
+}
+
+/* Лид — первый абзац, который вводит в тему. Крупнее обычного текста. */
+.article-lead {
+    font-size: 23px;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+
+/* ----------------------------------------------------------------------------
+   5. ПЛАШКА АВТОРА
+   Кто написал статью. Стоит сразу после лида, как в примере-образце.
+   Фото и подпись прижаты друг к другу (внутреннее), а от текста статьи
+   плашка отделена крупным отступом (внешнее).
+---------------------------------------------------------------------------- */
+.author {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);     /* расстояние между фото и подписью — небольшое */
+}
+
+/* Круглое фото автора. object-fit: cover — фото не растянется. */
+.author__photo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;           /* фото не сжимается, даже если текст длинный */
+    background: var(--bg-card-soft);
+}
+
+.author__label {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+.author__name {
+    font-size: 17px;
+    line-height: 1.45;
+    color: var(--text);
+}
+.author__name strong {
+    color: var(--text-strong);
+}
+
+
+/* ----------------------------------------------------------------------------
+   6. ДИСКЛЕЙМЕР «СХОДИТЕ К ВРАЧУ»
+   Жирная фраза из исходника про гликемический индекс и диабет.
+   Оформлена отдельной плашкой — как блок-предупреждение в Т—Ж.
+---------------------------------------------------------------------------- */
+.disclaimer {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.disclaimer__label {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.disclaimer__text {
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.55;
+}
+
+
+/* ----------------------------------------------------------------------------
+   7. ОГЛАВЛЕНИЕ
+   Список ссылок-якорей на разделы. Клик — плавный переход к разделу.
+---------------------------------------------------------------------------- */
+.toc {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: var(--space-lg) 0;
+    margin-bottom: var(--space-2xl);
+}
+
+.toc__title {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--space-md);
+}
+
+.toc__list {
+    list-style: none;         /* убираем стандартные точки списка */
+}
+
+/* Пункты оглавления стоят близко друг к другу — это один список */
+.toc__item {
+    margin-bottom: var(--space-sm);
+}
+.toc__item:last-child {
+    margin-bottom: 0;
+}
+
+.toc__link {
+    border-bottom: none;      /* в оглавлении подчёркивание лишнее */
+    color: var(--text);
+}
+.toc__link:hover {
+    color: var(--accent-hover);
+}
+
+
+/* ----------------------------------------------------------------------------
+   8. ЗАГОЛОВКИ РАЗДЕЛОВ (H2)
+   Каждый заголовок оформлен ОТДЕЛЬНО: над ним номер раздела в кружке,
+   сверху — линия-разделитель. Большой отступ сверху отделяет новый
+   раздел от предыдущего (сильное «внешнее»), а до своего текста
+   заголовок стоит близко (слабое «внутреннее»).
+---------------------------------------------------------------------------- */
+.section {
+    margin-top: var(--space-3xl);  /* крупный разрыв между разделами */
+}
+.section:first-of-type {
+    margin-top: var(--space-2xl);
+}
+
+.section__head {
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+/* Номер раздела — маленький кружок-бейдж над заголовком */
+.section__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    color: var(--accent);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+}
+
+.section__title {
+    color: var(--text-strong);
+    font-size: 32px;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+
+/* ----------------------------------------------------------------------------
+   9. КАРТОЧКА СОВЕТА (зелёные подсказки из исходника)
+   Всё, что в документе было выделено зелёным, выносим в такую плашку.
+   Слева — зелёная полоса, сверху — подпись «СОВЕТ».
+---------------------------------------------------------------------------- */
+.tip {
+    background: var(--bg-card);
+    border-left: 4px solid var(--tip);  /* зелёная полоса = «это совет» */
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+    /* Совет — отдельная мысль, поэтому отступы вокруг него крупные */
+    margin: var(--space-xl) 0;
+}
+
+.tip__label {
+    display: inline-block;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tip);
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+}
+
+.tip__text {
+    color: var(--text);
+}
+.tip__text p {
+    margin-bottom: var(--space-sm);
+}
+.tip__text p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ----------------------------------------------------------------------------
+   10. СПИСКИ
+   Маркированные и «чистые» списки правил ресторана.
+---------------------------------------------------------------------------- */
+.list {
+    margin: var(--space-md) 0;
+    padding-left: var(--space-lg);
+}
+.list li {
+    margin-bottom: var(--space-sm);   /* пункты одного списка — близко */
+}
+.list li:last-child {
+    margin-bottom: 0;
+}
+
+/* Список правил без точек: каждый пункт — мысль с жирным началом */
+.rules {
+    list-style: none;
+    margin: var(--space-md) 0;
+}
+.rules li {
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-lg);
+    position: relative;
+}
+.rules li:last-child {
+    margin-bottom: 0;
+}
+/* Аккуратная точка-маркер вместо стандартной */
+.rules li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+.rules strong {
+    color: var(--text-strong);
+}
+
+
+/* ----------------------------------------------------------------------------
+   11. КАРТИНКИ И ЗАГЛУШКИ
+   Самое важное для дальнейшей работы.
+
+   Как это работает:
+   - Каждая картинка обёрнута в <figure class="figure">.
+   - Внутри лежит <img> и серая заглушка .figure__placeholder.
+   - Пока файла картинки в папке /images нет — браузер не может
+     загрузить <img>, срабатывает обработчик onerror в HTML,
+     картинка прячется, и видна заглушка с номером и описанием.
+   - Как только вы кладёте файл с нужным именем в папку /images —
+     <img> успешно загружается и сам перекрывает заглушку.
+   Поэтому стили заранее заданы для ОБОИХ состояний и править их
+   при добавлении картинок не нужно.
+---------------------------------------------------------------------------- */
+.figure {
+    /* Картинка — самостоятельный объект, вокруг неё крупные отступы */
+    margin: var(--space-xl) 0;
+}
+
+/* Сама картинка: занимает всю ширину колонки, не вылезает за неё,
+   углы скруглены так же, как у карточек. */
+.figure__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    background: var(--bg-card-soft);
+}
+
+/* Заглушка — то, что видно, пока картинку не положили в папку.
+   По умолчанию СКРЫТА. Её показывает атрибут onerror прямо в теге <img>:
+   если файла нет и картинка не загрузилась — <img> прячется,
+   а заглушке выставляется display:flex. Если картинку положили
+   в папку — она грузится, onerror не срабатывает, заглушки не видно.
+   Высота держится за счёт min-height, чтобы вёрстка не «прыгала». */
+.figure__placeholder {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    min-height: 260px;
+    padding: var(--space-lg);
+    text-align: center;
+    background: var(--bg-card-soft);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+}
+
+.figure__placeholder-num {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+.figure__placeholder-name {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; /* как код */
+}
+.figure__placeholder-desc {
+    font-size: 16px;
+    color: var(--text);
+    max-width: 420px;
+}
+
+/* Подпись под картинкой. Прижата к картинке (внутреннее, маленький отступ),
+   цвет приглушённый — это вспомогательный текст. */
+.figure__caption {
+    margin-top: var(--space-sm);
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--text-muted);
+}
+
+
+/* ----------------------------------------------------------------------------
+   12. БЛОК «ОБ АВТОРЕ» В КОНЦЕ
+   Развёрнутый рассказ об авторе — как в примере-образце.
+---------------------------------------------------------------------------- */
+.about-author {
+    margin-top: var(--space-3xl);
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-xl);
+}
+
+.about-author__label {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--space-md);
+}
+
+/* Фото и текст об авторе стоят рядом и близко — это один смысловой блок */
+.about-author__body {
+    display: flex;
+    gap: var(--space-lg);
+    align-items: flex-start;
+}
+
+.about-author__photo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--bg-card-soft);
+}
+
+.about-author__name {
+    color: var(--text-strong);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: var(--space-xs);
+}
+.about-author__role {
+    color: var(--text-muted);
+    font-size: 16px;
+    margin-bottom: var(--space-md);
+}
+.about-author__text p {
+    margin-bottom: var(--space-sm);
+}
+.about-author__text p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ----------------------------------------------------------------------------
+   13. ПОДВАЛ
+   Служебная информация о работе. Мелкий приглушённый текст.
+---------------------------------------------------------------------------- */
+.footer {
+    margin-top: var(--space-2xl);
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-lg);
+    font-size: 15px;
+    color: var(--text-muted);
+}
+.footer p {
+    margin-bottom: var(--space-xs);
+}
+
+
+/* ----------------------------------------------------------------------------
+   14. АДАПТАЦИЯ ПОД ТЕЛЕФОН
+   На узких экранах уменьшаем кегль заголовков и поля,
+   плашку автора и блок «об авторе» разворачиваем в столбик.
+---------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+    body {
+        font-size: 17px;
+    }
+    .longread {
+        padding: var(--space-xl) var(--space-md) var(--space-2xl);
+    }
+    .article-header__title {
+        font-size: 32px;
+    }
+    .article-lead {
+        font-size: 19px;
+    }
+    .section__title {
+        font-size: 25px;
+    }
+    .section {
+        margin-top: var(--space-2xl);
+    }
+
+    /* Фото автора уходит над текстом, а не сбоку */
+    .author {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .about-author__body {
+        flex-direction: column;
+    }
+}
